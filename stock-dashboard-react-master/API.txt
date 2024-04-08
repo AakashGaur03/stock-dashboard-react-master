@@ -1,0 +1,11 @@
+https://rapidapi.com/manwilbahaa/api/yahoo-finance127/					35 / day
+
+
+https://rapidapi.com/letscrape-6bRBa3QguO5/api/real-time-finance-data/  		200 / month
+
+
+
+https://rapidapi.com/apidojo/api/bb-finance/						500 / month
+
+
+https://rapidapi.com/apidojo/api/yh-finance						500 / month
