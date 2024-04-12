@@ -146,16 +146,48 @@ export const fetchStockDetails = async (stockSymbol) => {
  */
 export const fetchQuote = async (stockSymbol) => {
   if(!stockSymbol) stockSymbol="AAPL"
-  const url = `${basePath}/quote?symbol=${stockSymbol}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
-  const response = await fetch(url);
+  // const url = `${basePath}/quote?symbol=${stockSymbol}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
+  // const response = await fetch(url);
 
-  if (!response.ok) {
-    const message = `An error has occured: ${response.status}`;
-    throw new Error(message);
+  // if (!response.ok) {
+  //   const message = `An error has occured: ${response.status}`;
+  //   throw new Error(message);
+  // }
+
+  // return await response.json();
+  if(!stockSymbol) stockSymbol="AAPL"
+  const options = {
+    method: "GET",
+    url: "https://yh-finance.p.rapidapi.com/stock/v2/get-summary",
+    params: {
+      symbol: `${stockSymbol}`,
+      region: "US",
+    },
+    headers: {
+      "X-RapidAPI-Key": "bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2",
+      "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
+    },
+  };
+
+  try {
+    const response = await axios.request(options);
+    console.log(response);
+    if (response) {
+      let data = {
+        d: parseFloat(response.data.price.regularMarketChange.fmt).toFixed(2),
+        dp: parseFloat(response.data.price.regularMarketChangePercent.fmt).toFixed(2),
+        h: parseFloat(response.data.price.regularMarketDayHigh.fmt).toFixed(2),
+        l: parseFloat(response.data.price.regularMarketDayLow.fmt).toFixed(2),
+        o: parseFloat(response.data.price.regularMarketOpen.fmt).toFixed(2),
+        pc: parseFloat(response.data.price.regularMarketPrice.fmt).toFixed(2),
+        c: parseFloat(response.data.price.regularMarketPreviousClose.fmt).toFixed(2),
+
+      };
+      if (data) return data;
+    }
+  } catch (error) {
+    console.error(error);
   }
-
-  return await response.json();
-  
 };
 
 /**
@@ -174,14 +206,70 @@ export const fetchHistoricalData = async (
 ) => {
   if(!stockSymbol) stockSymbol="AAPL"
 
-  const url = `${basePath}/stock/candle?symbol=${stockSymbol}&resolution=${resolution}&from=${from}&to=${to}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
-  const response = await fetch(url);
+  // const url = `${basePath}/stock/candle?symbol=${stockSymbol}&resolution=${resolution}&from=${from}&to=${to}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
+  // const response = await fetch(url);
 
-  if (!response.ok) {
-    const message = `An error has occured: ${response.status}`;
-    throw new Error(message);
+  // if (!response.ok) {
+  //   const message = `An error has occured: ${response.status}`;
+  //   throw new Error(message);
+  // }
+
+  // return await response.json();
+  const options = {
+    method: "GET",
+    url: "https://yh-finance.p.rapidapi.com/stock/v3/get-chart",
+    params: {
+      interval: `${resolution}`,
+      symbol: `${stockSymbol}`,
+      range: "5y",
+      region: "US",
+      includePrePost: "false",
+      useYfid: "true",
+      includeAdjustedClose: "true",
+      events: "capitalGain,div,split",
+    },
+    headers: {
+      "X-RapidAPI-Key": "bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2",
+      "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
+    },
+  };
+  // const options = {
+  //   method: 'GET',
+  //   url: 'https://yh-finance.p.rapidapi.com/stock/v2/get-chart',
+  //   params: {
+  //     interval: `${resolution}`,
+  //     symbol: `${stockSymbol}`,
+  //     range: '1d',
+  //     region: 'US'
+  //   },
+  //   headers: {
+  //     'X-RapidAPI-Key': 'bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2',
+  //     'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com'
+  //   }
+  // };
+
+  try {
+    const response = await axios.request(options);
+    const chartData = response.data.chart.result[0];
+
+    const dates = chartData.timestamp;
+    const values = chartData.indicators.quote[0].close;
+
+    const formattedData = dates.map((timestamp, index) => ({
+      date: dates[index], // Convert Unix timestamp to JavaScript Date object
+      value: values[index],
+    }));
+
+    return formattedData;
+    console.log(response);
+    console.log(response.data);
+    console.log(response.data.chart);
+    console.log(response.data.chart.result[0]);
+    console.log(response.data.chart.result[0].indicators);
+    console.log(response.data.chart.result[0].indicators.quote[0]);
+    console.log(response.data.chart.result[0].indicators.quote[0].close);
+    return response;
+  } catch (error) {
+    console.error(error);
   }
-
-  return await response.json();
-
 };
