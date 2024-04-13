@@ -15,7 +15,9 @@ const Search = () => {
     try {
       if (input) {
         const searchResults = await searchSymbol(input);
-        const result = searchResults.result;
+        console.log(searchResults,"Results")
+        const result = searchResults;
+        // const result = searchResults.result;
         setBestMatches(result);
       }
     } catch (error) {

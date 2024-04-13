@@ -28,13 +28,31 @@ const Chart = () => {
 
   const [data, setData] = useState([]);
 
+  // const formatData = (data) => {
+  //   return data.c.map((item, index) => {
+  //     return {
+  //       value: item.toFixed(2),
+  //       date: convertUnixTimestampToDate(data.t[index]),
+  //     };
+  //   });
+  // };
+  // const formatData = (data) => {
+  //   console.log(data,"ddd")
+  //   const timestamps = data.date;
+  //   const closePrices = data.value;
+  
+  //   const formattedData = timestamps.map((timestamp, index) => ({
+  //     date: convertUnixTimestampToDate(timestamps),
+  //     value: closePrices[index].toFixed(2), // Format close price to 2 decimal places
+  //   }));
+  
+  //   return formattedData;
+  // };
   const formatData = (data) => {
-    return data.c.map((item, index) => {
-      return {
-        value: item.toFixed(2),
-        date: convertUnixTimestampToDate(data.t[index]),
-      };
-    });
+    return data.map(item => ({
+      date: convertUnixTimestampToDate(item.date),
+      value: item.value.toFixed(2), // Format close price to 2 decimal places
+    }));
   };
 
   useEffect(() => {

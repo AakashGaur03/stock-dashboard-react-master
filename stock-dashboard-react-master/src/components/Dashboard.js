@@ -19,7 +19,7 @@ const Dashboard = () => {
   useEffect(() => {
     const updateStockDetails = async () => {
       try {
-        const result = await fetchStockDetails(stockSymbol);
+        const result = await fetchStockDetails(stockSymbol) || "";
         setStockDetails(result);
       } catch (error) {
         setStockDetails({});
@@ -48,7 +48,7 @@ const Dashboard = () => {
       }`}
     >
       <div className="col-span-1 md:col-span-2 xl:col-span-3 row-span-1 flex justify-start items-center">
-        <Header name={stockDetails.name} />
+        <Header name={stockDetails?.name} />
       </div>
       <div className="md:col-span-2 row-span-4">
         <Chart />
@@ -56,10 +56,11 @@ const Dashboard = () => {
       <div>
         <Overview
           symbol={stockSymbol}
-          price={quote.pc}
-          change={quote.d}
-          changePercent={quote.dp}
-          currency={stockDetails.currency}
+          price={quote?.pc}
+          change={quote?.d}
+          changePercent={quote?.dp}
+          currency={stockDetails?.currency}
+          currencySymbol={stockDetails?.currencySymbol}
         />
       </div>
       <div className="row-span-2 xl:row-span-3">
