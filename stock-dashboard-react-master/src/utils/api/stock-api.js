@@ -27,7 +27,7 @@ export const searchSymbol = async (query) => {
       region: "IN",
     },
     headers: {
-      "X-RapidAPI-Key": "bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2",
+      "X-RapidAPI-Key": "",
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
@@ -62,7 +62,7 @@ export const fetchStockDetails = async (stockSymbol) => {
       region: "US",
     },
     headers: {
-      "X-RapidAPI-Key": "bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2",
+      "X-RapidAPI-Key": "",
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
@@ -85,6 +85,12 @@ export const fetchStockDetails = async (stockSymbol) => {
         phone: response.data.summaryProfile.phone,
         shareOutstanding: 15441.88,
         ticker: response.data.quoteType.symbol,
+        peRatio:1,
+        pbRatio:response.data.defaultKeyStatistics.priceToBook.fmt,
+        RSI:1,
+        FibRess:1,
+        FTWeekHigh:response.data.summaryDetail.fiftyTwoWeekHigh.fmt,
+        SuppRess:1,
         weburl: "https://www.apple.com/",
       };
       if (data) return data;
@@ -119,7 +125,7 @@ export const fetchStockDetails = async (stockSymbol) => {
 //   //     events: "capitalGain,div,split",
 //   //   },
 //   //   headers: {
-//   //     "X-RapidAPI-Key": "bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2",
+//   //     "X-RapidAPI-Key": "",
 //   //     "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
 //   //   },
 //   // };
@@ -164,7 +170,7 @@ export const fetchQuote = async (stockSymbol) => {
       region: "US",
     },
     headers: {
-      "X-RapidAPI-Key": "bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2",
+      "X-RapidAPI-Key": "",
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
@@ -174,13 +180,13 @@ export const fetchQuote = async (stockSymbol) => {
     console.log(response);
     if (response) {
       let data = {
-        d: parseFloat(response.data.price.regularMarketChange.fmt).toFixed(2),
-        dp: parseFloat(response.data.price.regularMarketChangePercent.fmt).toFixed(2),
-        h: parseFloat(response.data.price.regularMarketDayHigh.fmt).toFixed(2),
-        l: parseFloat(response.data.price.regularMarketDayLow.fmt).toFixed(2),
-        o: parseFloat(response.data.price.regularMarketOpen.fmt).toFixed(2),
-        pc: parseFloat(response.data.price.regularMarketPrice.fmt).toFixed(2),
-        c: parseFloat(response.data.price.regularMarketPreviousClose.fmt).toFixed(2),
+        d: parseFloat(response.data.price.regularMarketChange.fmt.replace(/,/g, '')).toFixed(2),
+        dp: parseFloat(response.data.price.regularMarketChangePercent.fmt.replace(/,/g, '')).toFixed(2),
+        h: parseFloat(response.data.price.regularMarketDayHigh.fmt.replace(/,/g, '')).toFixed(2),
+        l: parseFloat(response.data.price.regularMarketDayLow.fmt.replace(/,/g, '')).toFixed(2),
+        o: parseFloat(response.data.price.regularMarketOpen.fmt.replace(/,/g, '')).toFixed(2),
+        pc: parseFloat(response.data.price.regularMarketPrice.fmt.replace(/,/g, '')).toFixed(2),
+        c: parseFloat(response.data.price.regularMarketPreviousClose.fmt.replace(/,/g, '')).toFixed(2),
 
       };
       if (data) return data;
@@ -229,7 +235,7 @@ export const fetchHistoricalData = async (
       events: "capitalGain,div,split",
     },
     headers: {
-      "X-RapidAPI-Key": "bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2",
+      "X-RapidAPI-Key": "",
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
