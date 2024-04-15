@@ -1,23 +1,8 @@
 import axios from "axios";
 const basePath = "https://finnhub.io/api/v1";
-
-/**
- * Searches best stock matches based on a user's query
- * @param {string} query - The user's query, e.g. 'fb'
- * @returns {Promise<Object[]>} Response array of best stock matches
- */
 export const searchSymbol = async (query) => {
   if(!query) query="APPL"
 
-  // const url = `${basePath}/search?q=${query}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
-  // const response = await fetch(url);
-
-  // if (!response.ok) {
-  //   const message = `An error has occured: ${response.status}`;
-  //   throw new Error(message);
-  // }
-
-  // return await response.json();
   console.log(query);
   const options = {
     method: "GET",
@@ -35,24 +20,13 @@ export const searchSymbol = async (query) => {
   try {
     const response = await axios.request(options);
     console.log(response);
-    // if (!response.ok) {
-    //   const message = `An error has occured: ${response.status}`;
-    //   throw new Error(message);
-    // }
     return response.data.quotes;
   } catch (error) {
     console.error(error);
   }
 };
 
-/**
- * Fetches the details of a given company
- * @param {string} stockSymbol - Symbol of the company, e.g. 'FB'
- * @returns {Promise<Object>} Response object
- */
 export const fetchStockDetails = async (stockSymbol) => {
-  // const url = `${basePath}/stock/profile2?symbol=${stockSymbol}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
-  // const response = await fetch(url);
   if(!stockSymbol) stockSymbol="AAPL"
   const options = {
     method: "GET",
@@ -85,12 +59,13 @@ export const fetchStockDetails = async (stockSymbol) => {
         phone: response.data.summaryProfile.phone,
         shareOutstanding: 15441.88,
         ticker: response.data.quoteType.symbol,
-        peRatio:1,
+        totalRevenue:response.data.financialData.totalRevenue.fmt,
         pbRatio:response.data.defaultKeyStatistics.priceToBook.fmt,
-        RSI:1,
-        FibRess:1,
-        FTWeekHigh:response.data.summaryDetail.fiftyTwoWeekHigh.fmt,
-        SuppRess:1,
+        TotalCash:response.data.financialData.totalCash.fmt,
+        regularMarketVolume:response.data.price.regularMarketVolume.fmt,
+        FTWeekLow:parseFloat(response.data.summaryDetail.fiftyTwoWeekLow.fmt.replace(/,/g, '')).toFixed(2), 
+        FTWeekHigh:parseFloat(response.data.summaryDetail.fiftyTwoWeekHigh.fmt.replace(/,/g, '')).toFixed(2), 
+        debtToEquity:response.data.financialData.debtToEquity.fmt,
         weburl: "https://www.apple.com/",
       };
       if (data) return data;
@@ -98,69 +73,11 @@ export const fetchStockDetails = async (stockSymbol) => {
   } catch (error) {
     console.error(error);
   }
-  // try {
-  //   const response = await axios.request(options);
-  //   console.log(response.data,"ChartDATA");
-  // return await response.data;
-
-  // } catch (error) {
-  //   console.error(error);
-  // }
 };
 
-// export const fetchStockDetails = async (stockSymbol) => {
-//   const url = `${basePath}/stock/profile2?symbol=${stockSymbol}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
-//   const response = await fetch(url);
-//   // const options = {
-//   //   method: "GET",
-//   //   url: "https://yh-finance.p.rapidapi.com/stock/v3/get-chart",
-//   //   params: {
-//   //     interval: "1mo",
-//   //     symbol: "AMRN",
-//   //     range: "5y",
-//   //     region: "US",
-//   //     includePrePost: "false",
-//   //     useYfid: "true",
-//   //     includeAdjustedClose: "true",
-//   //     events: "capitalGain,div,split",
-//   //   },
-//   //   headers: {
-//   //     "X-RapidAPI-Key": "",
-//   //     "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
-//   //   },
-//   // };
-
-//   if (!response.ok) {
-//     const message = `An error has occured: ${response.status}`;
-//     throw new Error(message);
-//   }
-
-//   return await response.json();
-//   // try {
-//   //   const response = await axios.request(options);
-//   //   console.log(response.data,"ChartDATA");
-//   // return await response.data;
-
-//   // } catch (error) {
-//   //   console.error(error);
-//   // }
-// };
-/**
- * Fetches the latest quote of a given stock
- * @param {string} stockSymbol - Symbol of the company, e.g. 'FB'
- * @returns {Promise<Object>} Response object
- */
 export const fetchQuote = async (stockSymbol) => {
   if(!stockSymbol) stockSymbol="AAPL"
-  // const url = `${basePath}/quote?symbol=${stockSymbol}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
-  // const response = await fetch(url);
 
-  // if (!response.ok) {
-  //   const message = `An error has occured: ${response.status}`;
-  //   throw new Error(message);
-  // }
-
-  // return await response.json();
   if(!stockSymbol) stockSymbol="AAPL"
   const options = {
     method: "GET",
@@ -196,14 +113,6 @@ export const fetchQuote = async (stockSymbol) => {
   }
 };
 
-/**
- * Fetches historical data of a stock (to be displayed on a chart)
- * @param {string} stockSymbol - Symbol of the company, e.g. 'FB'
- * @param {string} resolution - Resolution of timestamps. Supported resolution includes: 1, 5, 15, 30, 60, D, W, M
- * @param {number} from - UNIX timestamp (seconds elapsed since January 1st, 1970 at UTC). Interval initial value.
- * @param {number} to - UNIX timestamp (seconds elapsed since January 1st, 1970 at UTC). Interval end value.
- * @returns {Promise<Object>} Response object
- */
 export const fetchHistoricalData = async (
   stockSymbol,
   resolution,
@@ -211,16 +120,6 @@ export const fetchHistoricalData = async (
   to
 ) => {
   if(!stockSymbol) stockSymbol="AAPL"
-
-  // const url = `${basePath}/stock/candle?symbol=${stockSymbol}&resolution=${resolution}&from=${from}&to=${to}&token=cne00d9r01qml3k1vbfgcne00d9r01qml3k1vbg0`;
-  // const response = await fetch(url);
-
-  // if (!response.ok) {
-  //   const message = `An error has occured: ${response.status}`;
-  //   throw new Error(message);
-  // }
-
-  // return await response.json();
   const options = {
     method: "GET",
     url: "https://yh-finance.p.rapidapi.com/stock/v3/get-chart",
@@ -239,21 +138,6 @@ export const fetchHistoricalData = async (
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
-  // const options = {
-  //   method: 'GET',
-  //   url: 'https://yh-finance.p.rapidapi.com/stock/v2/get-chart',
-  //   params: {
-  //     interval: `${resolution}`,
-  //     symbol: `${stockSymbol}`,
-  //     range: '1d',
-  //     region: 'US'
-  //   },
-  //   headers: {
-  //     'X-RapidAPI-Key': 'bb3721361emshddcfed580ee75dap16315bjsn1b92129b04d2',
-  //     'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com'
-  //   }
-  // };
-
   try {
     const response = await axios.request(options);
     const chartData = response.data.chart.result[0];
@@ -267,14 +151,38 @@ export const fetchHistoricalData = async (
     }));
 
     return formattedData;
-    console.log(response);
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const fetchNewsAboutStocks = async (
+  stockSymbol,
+  resolution,
+  from,
+  to
+) => {
+  if(!stockSymbol) stockSymbol="AAPL"
+  const options = {
+    method: 'POST',
+    url: 'https://yh-finance.p.rapidapi.com/news/v2/list',
+    params: {
+      region: 'US',
+      snippetCount: '28',
+      s: `${stockSymbol}`
+    },
+    headers: {
+      'content-type': 'text/plain',
+      'X-RapidAPI-Key': '94d5879a35msh63d070accbd04e3p13e33ejsnb6869afe3816',
+      'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com'
+    },
+    data: ''
+  };
+  
+  try {
+    const response = await axios.request(options);
     console.log(response.data);
-    console.log(response.data.chart);
-    console.log(response.data.chart.result[0]);
-    console.log(response.data.chart.result[0].indicators);
-    console.log(response.data.chart.result[0].indicators.quote[0]);
-    console.log(response.data.chart.result[0].indicators.quote[0].close);
-    return response;
+    return response.data;
   } catch (error) {
     console.error(error);
   }

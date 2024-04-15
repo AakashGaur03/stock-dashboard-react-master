@@ -15,12 +15,13 @@ const Details = ({ details }) => {
     finnhubIndustry: "Industry",
   };
   const detailsList2 = {
-    peRatio: "P/E ratio",
     pbRatio: "P/B ratio",
-    RSI: "Rsi ",
-    FibRess: "Fib resistance ",
-    FTWeekHigh: "52 weeks high low",
-    SuppRess: "Support/ resistance",
+    FTWeekHigh: "52 weeks high",
+    FTWeekLow: "52 weeks Low",
+    // regularMarketVolume: "Regular Market Volume",
+    TotalCash: "Total Cash ",
+    totalRevenue: "Total Revenue",
+    debtToEquity: "Debt To Equity",
   };
 
   const convertToBillion = (number) => {

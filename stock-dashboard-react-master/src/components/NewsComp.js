@@ -2,7 +2,10 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import React from "react";
 
-const NewsComp = () => {
+
+
+const NewsComp = ({newsData}) => {
+  console.log(newsData,"AAAAAAAAAAAAAAAAA")
   return (
     <div>
       <Card style={{ width: "18rem" }}>

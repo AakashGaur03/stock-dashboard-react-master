@@ -5,7 +5,7 @@ import Details from "./Details";
 import Chart from "./Chart";
 import Header from "./Header";
 import StockContext from "../context/StockContext";
-import { fetchStockDetails, fetchQuote } from "../utils/api/stock-api";
+import { fetchStockDetails, fetchQuote ,fetchNewsAboutStocks } from "../utils/api/stock-api";
 import NewsComp from "./NewsComp";
 
 const Dashboard = () => {
@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [stockDetails, setStockDetails] = useState({});
 
   const [quote, setQuote] = useState({});
+  const [news, setNews] = useState({});
 
   useEffect(() => {
     const updateStockDetails = async () => {
@@ -37,7 +38,17 @@ const Dashboard = () => {
         console.log(error);
       }
     };
-
+    const updateStockNews = async () => {
+      try {
+        const result = await fetchNewsAboutStocks(stockSymbol);
+        setNews(result);
+        console.log(news,"aasv")
+      } catch (error) {
+        setNews({});
+        console.log(error);
+      }
+    };
+    updateStockNews();
     updateStockDetails();
     updateStockOverview();
   }, [stockSymbol]);
@@ -68,7 +79,7 @@ const Dashboard = () => {
         <Details details={stockDetails} />
       </div>
       <div>
-        <NewsComp />
+        <NewsComp newsData={news} />
       </div>
     </div>
   );
