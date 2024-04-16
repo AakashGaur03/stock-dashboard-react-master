@@ -27,27 +27,8 @@
 //   const { stockSymbol } = useContext(StockContext);
 
 //   const [data, setData] = useState([]);
+//   const [yAxisDomain, setYAxisDomain] = useState([0, 1]); // Initial domain for Y-axis
 
-//   // const formatData = (data) => {
-//   //   return data.c.map((item, index) => {
-//   //     return {
-//   //       value: item.toFixed(2),
-//   //       date: convertUnixTimestampToDate(data.t[index]),
-//   //     };
-//   //   });
-//   // };
-//   // const formatData = (data) => {
-//   //   console.log(data,"ddd")
-//   //   const timestamps = data.date;
-//   //   const closePrices = data.value;
-  
-//   //   const formattedData = timestamps.map((timestamp, index) => ({
-//   //     date: convertUnixTimestampToDate(timestamps),
-//   //     value: closePrices[index].toFixed(2), // Format close price to 2 decimal places
-//   //   }));
-  
-//   //   return formattedData;
-//   // };
 //   const formatData = (data) => {
 //     return data.map(item => ({
 //       date: convertUnixTimestampToDate(item.date),
@@ -78,6 +59,12 @@
 //           endTimestampUnix
 //         );
 //         setData(formatData(result));
+
+//         // Calculate minimum and maximum values for Y-axis domain
+//         const values = result.map(item => item.value);
+//         const minValue = Math.min(...values);
+//         const maxValue = Math.max(...values);
+//         setYAxisDomain([minValue, maxValue]);
 //       } catch (error) {
 //         setData([]);
 //         console.log(error);
@@ -87,6 +74,9 @@
 //     updateChartData();
 //   }, [stockSymbol, filter]);
 
+//   const formatYAxisTick = (tick) => {
+//     return tick.toFixed(2); // Format tick to 2 decimal places
+//   };
 //   return (
 //     <Card>
 //       <ul className="flex absolute top-2 right-2 z-40">
@@ -131,7 +121,8 @@
 //             strokeWidth={0.5}
 //           />
 //           <XAxis dataKey="date" />
-//           <YAxis domain={["dataMin", "dataMax"]} />
+//           <YAxis domain={yAxisDomain}
+//           tickFormatter={formatYAxisTick} />
 //         </AreaChart>
 //       </ResponsiveContainer>
 //     </Card>
@@ -163,34 +154,32 @@ import { chartConfig } from "../constants/config";
 
 const Chart = () => {
   const [filter, setFilter] = useState("1W");
+  const [loading, setLoading] = useState(false); // State for loading indicator
 
   const { darkMode } = useContext(ThemeContext);
-
   const { stockSymbol } = useContext(StockContext);
-
   const [data, setData] = useState([]);
-  const [yAxisDomain, setYAxisDomain] = useState([0, 1]); // Initial domain for Y-axis
+  const [yAxisDomain, setYAxisDomain] = useState([0, 1]);
 
   const formatData = (data) => {
     return data.map(item => ({
       date: convertUnixTimestampToDate(item.date),
-      value: item.value.toFixed(2), // Format close price to 2 decimal places
+      value: item.value.toFixed(2),
     }));
   };
 
   useEffect(() => {
     const getDateRange = () => {
       const { days, weeks, months, years } = chartConfig[filter];
-
       const endDate = new Date();
       const startDate = createDate(endDate, -days, -weeks, -months, -years);
-
       const startTimestampUnix = convertDateToUnixTimestamp(startDate);
       const endTimestampUnix = convertDateToUnixTimestamp(endDate);
       return { startTimestampUnix, endTimestampUnix };
     };
 
     const updateChartData = async () => {
+      setLoading(true); // Set loading to true when fetching data
       try {
         const { startTimestampUnix, endTimestampUnix } = getDateRange();
         const resolution = chartConfig[filter].resolution;
@@ -201,8 +190,6 @@ const Chart = () => {
           endTimestampUnix
         );
         setData(formatData(result));
-
-        // Calculate minimum and maximum values for Y-axis domain
         const values = result.map(item => item.value);
         const minValue = Math.min(...values);
         const maxValue = Math.max(...values);
@@ -210,6 +197,8 @@ const Chart = () => {
       } catch (error) {
         setData([]);
         console.log(error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -217,10 +206,15 @@ const Chart = () => {
   }, [stockSymbol, filter]);
 
   const formatYAxisTick = (tick) => {
-    return tick.toFixed(2); // Format tick to 2 decimal places
+    return tick.toFixed(2);
   };
+
   return (
     <Card>
+      {loading && ( // Show spinner when loading is true
+        <div className="spinner-border spinnerClass" role="status">
+        </div>
+      )}
       <ul className="flex absolute top-2 right-2 z-40">
         {Object.keys(chartConfig).map((item) => (
           <li key={item}>
@@ -263,8 +257,7 @@ const Chart = () => {
             strokeWidth={0.5}
           />
           <XAxis dataKey="date" />
-          <YAxis domain={yAxisDomain}
-          tickFormatter={formatYAxisTick} />
+          <YAxis domain={yAxisDomain} tickFormatter={formatYAxisTick} />
         </AreaChart>
       </ResponsiveContainer>
     </Card>

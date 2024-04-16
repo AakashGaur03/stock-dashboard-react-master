@@ -7,6 +7,7 @@ import Header from "./Header";
 import StockContext from "../context/StockContext";
 import { fetchStockDetails, fetchQuote ,fetchNewsAboutStocks } from "../utils/api/stock-api";
 import NewsComp from "./NewsComp";
+import Quaterly from "./Quaterly";
 
 const Dashboard = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -16,7 +17,7 @@ const Dashboard = () => {
   const [stockDetails, setStockDetails] = useState({});
 
   const [quote, setQuote] = useState({});
-  const [news, setNews] = useState({});
+  const [news, setNews] = useState([]);
 
   useEffect(() => {
     const updateStockDetails = async () => {
@@ -77,6 +78,9 @@ const Dashboard = () => {
       </div>
       <div className="row-span-2 xl:row-span-3">
         <Details details={stockDetails} />
+      </div>
+      <div>
+        {/* <Quaterly details={stockDetails}></Quaterly> */}
       </div>
       <div>
         <NewsComp newsData={news} />

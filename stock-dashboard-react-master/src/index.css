@@ -24,3 +24,65 @@
     min-height: 350px;
   }
 }
+
+.darkModeClass{
+  background-color:#111827 !important ;
+  border-color: #272c37 !important;
+  color: #d1d5db !important;
+}
+.lightModeClass{
+  background-color:white !important ;
+  border-color: #272c37 !important;
+  color: black !important;
+}
+
+.btnColor{
+  background-color:#4f46e5 !important
+}
+.wordLimit{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+}
+
+
+.liCirlceClass {
+  border-top: 2px solid #f0575e;
+  margin: 15px 0 0 0 !important;
+  padding: 10px 32px 0 0 !important;
+  position: relative;
+  float: left;
+  list-style: none;
+  width: 25%;
+}
+.liCirlceClassEnd {
+  /* width: 25%; */
+  border-top: 2px solid transparent;
+  margin: 15px 0 0 0 !important;
+  padding: 10px 32px 0 0 !important;
+  position: relative;
+  float: left;
+  list-style: none;
+}
+.circleClass {
+  position: absolute;
+  height: 19px;
+  width: 18px;
+  top: -11px;
+  left: -2px;
+  background: #fff;
+  border: 3px solid #f0575e;
+  border-radius: 10px;
+}
+.circle-container{
+  display: flex;
+  justify-content: center;
+}
+
+.spinnerClass{
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
+}

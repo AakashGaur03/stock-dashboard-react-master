@@ -1,5 +1,6 @@
 import axios from "axios";
-const basePath = "https://finnhub.io/api/v1";
+import { API_KEY } from "../APIKEY";
+
 export const searchSymbol = async (query) => {
   if(!query) query="APPL"
 
@@ -12,7 +13,7 @@ export const searchSymbol = async (query) => {
       region: "IN",
     },
     headers: {
-      "X-RapidAPI-Key": "",
+      "X-RapidAPI-Key": API_KEY,
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
@@ -36,7 +37,7 @@ export const fetchStockDetails = async (stockSymbol) => {
       region: "US",
     },
     headers: {
-      "X-RapidAPI-Key": "",
+      "X-RapidAPI-Key": API_KEY,
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
@@ -67,6 +68,10 @@ export const fetchStockDetails = async (stockSymbol) => {
         FTWeekHigh:parseFloat(response.data.summaryDetail.fiftyTwoWeekHigh.fmt.replace(/,/g, '')).toFixed(2), 
         debtToEquity:response.data.financialData.debtToEquity.fmt,
         weburl: "https://www.apple.com/",
+
+        quaterArray:response.data.earnings.earningsChart.quarterly
+
+
       };
       if (data) return data;
     }
@@ -87,7 +92,7 @@ export const fetchQuote = async (stockSymbol) => {
       region: "US",
     },
     headers: {
-      "X-RapidAPI-Key": "",
+      "X-RapidAPI-Key": API_KEY,
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
@@ -134,7 +139,7 @@ export const fetchHistoricalData = async (
       events: "capitalGain,div,split",
     },
     headers: {
-      "X-RapidAPI-Key": "",
+      "X-RapidAPI-Key": API_KEY,
       "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
   };
@@ -181,8 +186,9 @@ export const fetchNewsAboutStocks = async (
   
   try {
     const response = await axios.request(options);
-    console.log(response.data);
-    return response.data;
+    let streams=response.data.data.main.stream
+    let finaldata = streams.slice(0, 4).map(element => element.content);    
+    return finaldata;
   } catch (error) {
     console.error(error);
   }
