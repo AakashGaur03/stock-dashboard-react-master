@@ -1,10 +1,12 @@
 import axios from "axios";
 import { API_KEY } from "../APIKEY";
 
-export const searchSymbol = async (query) => {
-  if(!query) query="APPL"
+export const searchSymbol = async (query, setLoadingSearch) => {
+  setLoadingSearch(true);
+  if (!query) query = "APPL";
 
   console.log(query);
+
   const options = {
     method: "GET",
     url: "https://yh-finance.p.rapidapi.com/auto-complete",
@@ -20,15 +22,17 @@ export const searchSymbol = async (query) => {
 
   try {
     const response = await axios.request(options);
-    console.log(response);
+    // console.log(response);
     return response.data.quotes;
   } catch (error) {
     console.error(error);
+  } finally {
+    setLoadingSearch(false);
   }
 };
 
 export const fetchStockDetails = async (stockSymbol) => {
-  if(!stockSymbol) stockSymbol="AAPL"
+  if (!stockSymbol) stockSymbol = "AAPL";
   const options = {
     method: "GET",
     url: "https://yh-finance.p.rapidapi.com/stock/v2/get-summary",
@@ -44,7 +48,7 @@ export const fetchStockDetails = async (stockSymbol) => {
 
   try {
     const response = await axios.request(options);
-    console.log(response);
+    // console.log(response);
     if (response) {
       let data = {
         country: response.data.summaryProfile.country,
@@ -60,18 +64,20 @@ export const fetchStockDetails = async (stockSymbol) => {
         phone: response.data.summaryProfile.phone,
         shareOutstanding: 15441.88,
         ticker: response.data.quoteType.symbol,
-        totalRevenue:response.data.financialData.totalRevenue.fmt,
-        pbRatio:response.data.defaultKeyStatistics.priceToBook.fmt,
-        TotalCash:response.data.financialData.totalCash.fmt,
-        regularMarketVolume:response.data.price.regularMarketVolume.fmt,
-        FTWeekLow:parseFloat(response.data.summaryDetail.fiftyTwoWeekLow.fmt.replace(/,/g, '')).toFixed(2), 
-        FTWeekHigh:parseFloat(response.data.summaryDetail.fiftyTwoWeekHigh.fmt.replace(/,/g, '')).toFixed(2), 
-        debtToEquity:response.data.financialData.debtToEquity.fmt,
+        totalRevenue: response.data.financialData.totalRevenue.fmt,
+        pbRatio: response.data.defaultKeyStatistics.priceToBook.fmt,
+        TotalCash: response.data.financialData.totalCash.fmt,
+        regularMarketVolume: response.data.price.regularMarketVolume.fmt,
+        FTWeekLow: parseFloat(
+          response.data.summaryDetail.fiftyTwoWeekLow.fmt.replace(/,/g, "")
+        ).toFixed(2),
+        FTWeekHigh: parseFloat(
+          response.data.summaryDetail.fiftyTwoWeekHigh.fmt.replace(/,/g, "")
+        ).toFixed(2),
+        debtToEquity: response.data.financialData.debtToEquity.fmt,
         weburl: "https://www.apple.com/",
 
-        quaterArray:response.data.earnings.earningsChart.quarterly
-
-
+        quaterArray: response.data.earnings?.earningsChart?.quarterly,
       };
       if (data) return data;
     }
@@ -81,9 +87,9 @@ export const fetchStockDetails = async (stockSymbol) => {
 };
 
 export const fetchQuote = async (stockSymbol) => {
-  if(!stockSymbol) stockSymbol="AAPL"
+  if (!stockSymbol) stockSymbol = "AAPL";
 
-  if(!stockSymbol) stockSymbol="AAPL"
+  if (!stockSymbol) stockSymbol = "AAPL";
   const options = {
     method: "GET",
     url: "https://yh-finance.p.rapidapi.com/stock/v2/get-summary",
@@ -99,17 +105,30 @@ export const fetchQuote = async (stockSymbol) => {
 
   try {
     const response = await axios.request(options);
-    console.log(response);
+    // console.log(response);
     if (response) {
       let data = {
-        d: parseFloat(response.data.price.regularMarketChange.fmt.replace(/,/g, '')).toFixed(2),
-        dp: parseFloat(response.data.price.regularMarketChangePercent.fmt.replace(/,/g, '')).toFixed(2),
-        h: parseFloat(response.data.price.regularMarketDayHigh.fmt.replace(/,/g, '')).toFixed(2),
-        l: parseFloat(response.data.price.regularMarketDayLow.fmt.replace(/,/g, '')).toFixed(2),
-        o: parseFloat(response.data.price.regularMarketOpen.fmt.replace(/,/g, '')).toFixed(2),
-        pc: parseFloat(response.data.price.regularMarketPrice.fmt.replace(/,/g, '')).toFixed(2),
-        c: parseFloat(response.data.price.regularMarketPreviousClose.fmt.replace(/,/g, '')).toFixed(2),
-
+        d: parseFloat(
+          response.data.price.regularMarketChange.fmt.replace(/,/g, "")
+        ).toFixed(2),
+        dp: parseFloat(
+          response.data.price.regularMarketChangePercent.fmt.replace(/,/g, "")
+        ).toFixed(2),
+        h: parseFloat(
+          response.data.price.regularMarketDayHigh.fmt.replace(/,/g, "")
+        ).toFixed(2),
+        l: parseFloat(
+          response.data.price.regularMarketDayLow.fmt.replace(/,/g, "")
+        ).toFixed(2),
+        o: parseFloat(
+          response.data.price.regularMarketOpen.fmt.replace(/,/g, "")
+        ).toFixed(2),
+        pc: parseFloat(
+          response.data.price.regularMarketPrice.fmt.replace(/,/g, "")
+        ).toFixed(2),
+        c: parseFloat(
+          response.data.price.regularMarketPreviousClose.fmt.replace(/,/g, "")
+        ).toFixed(2),
       };
       if (data) return data;
     }
@@ -124,7 +143,7 @@ export const fetchHistoricalData = async (
   from,
   to
 ) => {
-  if(!stockSymbol) stockSymbol="AAPL"
+  if (!stockSymbol) stockSymbol = "AAPL";
   const options = {
     method: "GET",
     url: "https://yh-finance.p.rapidapi.com/stock/v3/get-chart",
@@ -156,7 +175,6 @@ export const fetchHistoricalData = async (
     }));
 
     return formattedData;
-
   } catch (error) {
     console.error(error);
   }
@@ -167,27 +185,27 @@ export const fetchNewsAboutStocks = async (
   from,
   to
 ) => {
-  if(!stockSymbol) stockSymbol="AAPL"
+  if (!stockSymbol) stockSymbol = "AAPL";
   const options = {
-    method: 'POST',
-    url: 'https://yh-finance.p.rapidapi.com/news/v2/list',
+    method: "POST",
+    url: "https://yh-finance.p.rapidapi.com/news/v2/list",
     params: {
-      region: 'US',
-      snippetCount: '28',
-      s: `${stockSymbol}`
+      region: "US",
+      snippetCount: "28",
+      s: `${stockSymbol}`,
     },
     headers: {
-      'content-type': 'text/plain',
-      'X-RapidAPI-Key': '94d5879a35msh63d070accbd04e3p13e33ejsnb6869afe3816',
-      'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com'
+      "content-type": "text/plain",
+      "X-RapidAPI-Key": API_KEY,
+      "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
     },
-    data: ''
+    data: "",
   };
-  
+
   try {
     const response = await axios.request(options);
-    let streams=response.data.data.main.stream
-    let finaldata = streams.slice(0, 4).map(element => element.content);    
+    let streams = response.data.data.main.stream;
+    let finaldata = streams.slice(0, 4).map((element) => element.content);
     return finaldata;
   } catch (error) {
     console.error(error);

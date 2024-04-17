@@ -5,7 +5,6 @@ import Table from "react-bootstrap/Table";
 const Details = ({ details }) => {
   const { darkMode } = useContext(ThemeContext);
 
-  console.log(details.quaterArray, "aadssd");
 
   let quarters = [];
   let prices = [];
@@ -35,7 +34,6 @@ const Details = ({ details }) => {
   };
 
   const convertToBillion = (number) => {
-    console.log(number, "number");
     return (number / 1000000000).toFixed(2);
   };
 
@@ -124,22 +122,6 @@ const Details = ({ details }) => {
         </>
       )}
 
-      {/* <div className="circle-container">
-        {quarters.map((quarter, index) => (
-          <div
-            key={index}
-            className={
-              index === quarters.length - 1
-                ? "liCirlceClassEnd"
-                : "liCirlceClass"
-            }
-          >
-            <span className="quater">{quarter}</span>
-            <span className="circleClass"></span>
-            <span className="price">{prices[index]}</span>
-          </div>
-        ))}
-      </div> */}
     </>
   );
 };

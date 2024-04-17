@@ -7,7 +7,6 @@ import Header from "./Header";
 import StockContext from "../context/StockContext";
 import { fetchStockDetails, fetchQuote ,fetchNewsAboutStocks } from "../utils/api/stock-api";
 import NewsComp from "./NewsComp";
-import Quaterly from "./Quaterly";
 
 const Dashboard = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -43,7 +42,6 @@ const Dashboard = () => {
       try {
         const result = await fetchNewsAboutStocks(stockSymbol);
         setNews(result);
-        console.log(news,"aasv")
       } catch (error) {
         setNews({});
         console.log(error);
@@ -80,7 +78,6 @@ const Dashboard = () => {
         <Details details={stockDetails} />
       </div>
       <div>
-        {/* <Quaterly details={stockDetails}></Quaterly> */}
       </div>
       <div>
         <NewsComp newsData={news} />
